@@ -1,68 +1,26 @@
-class Game
-  attr_accessor :attempts, :clue
-  attr_reader :word, :char_bank
-  def initialize
-    @word = random_word
-    @attempts = 6
-    @char_bank = []
-    @clue = @word.gsub(/\w/, "_")
-    play_game
-  end
+require_relative 'game.rb'
+require 'yaml'
 
-  def add_to_bank(value)
-    @char_bank.push(value)
-  end
-  
-  def random_word
-    dictionary = File.readlines('google-10000-english-no-swears.txt')
-    word = dictionary[rand(0..9893)].chomp
-    if word.length >= 5 && word.length <= 12
-      word
-    else random_word
-    end
-  end
+#instantate a new game 
+#game = Game.new
+#puts game.class
 
-  def user_guess
-    puts "Enter a single character"
-    guess = gets.chomp.downcase
-    if guess.length == 1 && guess.match?(/[a-z]/)
-      puts "valid: #{guess}"
-      char_bank.include?(guess) ? user_guess : compare_guess(guess)
-    else
-      puts "#{guess}: not valid!"
-      user_guess
-    end
-  end
-
-  def compare_guess(guess)
-    if word.include?(guess)
-      puts "word does cointain #{guess}!"
-      word.each_char.with_index do |c, i|
-        if c == guess
-          clue[i] = guess
-        end
-      end
-      add_to_bank(guess)
-      puts "new clue: #{clue}"
-    else
-      puts "no match adding to bank"
-      add_to_bank(guess)
-      @attempts -= 1
-      puts "attempts:#{attempts}"
-    end
-  end
-
-  def play_game
-    puts "secret word is #{word} with a lenght of #{word.length}"
-    puts "#{clue}\tattempts left:#{attempts}"
-    while attempts > 0
-      user_guess
-      puts "Your letter bank: #{char_bank}"
-    end
-    puts "end of game"
-  end
+def load_game
+  puts "loading game..."
+  data = File.open('saves/save_data_test_1.yaml', 'r').read
+  saved_data = YAML.load data
+  puts saved_data
+  #saved_data
+  Game.load_game(saved_data)
 end
 
-Game.new
+puts "Press 1 to load a saved game\nPress 2 to start a new game"
+mode = gets.chomp
+until mode == '1' || mode == '2'
+  puts "Press 1 to load a saved game\nPress 2 to start a new game"
+  mode = gets.chomp
+end
+game = mode == '1' ? load_game : Game.new
 
-#word.each_char { |c| compare each char with word }
+puts game.class
+game.play_game
