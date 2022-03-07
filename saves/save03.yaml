@@ -1,8 +1,12 @@
 ---
-:word: separate
-:attempts: 6
+:word: bring
+:attempts: 3
 :char_bank:
 - a
 - e
-:clue: _e_a_a_e
+- i
+- o
+- b
+- g
+:clue: b_i_g
 :game_won: false
