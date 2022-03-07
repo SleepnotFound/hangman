@@ -19,15 +19,6 @@ class Game
     })
   end
 
-  def save_data(data)
-    Dir.mkdir('saves') unless Dir.exist?('saves')
-    filename = "saves/save_02.yaml"
-
-    File.open(filename, 'w') do |file|
-      file.puts data
-    end
-  end
-
   def self.load_game(data)
     game = self.new
     game.word = data[:word]
@@ -57,8 +48,8 @@ class Game
     guess = gets.chomp.downcase
     if guess == 'save'
       data = self.to_yaml
-      save_data(data)
-      puts "\e[32myour game has been saved!\e[0m"
+      #puts "\e[32myour game has been saved!\e[0m"
+      guess
     elsif guess.length == 1 && guess.match?(/[a-z]/)
       char_bank.include?(guess) ? user_guess : compare_guess(guess)
     elsif guess.length >= 5 && guess.match?(/[a-z]/)
@@ -87,7 +78,6 @@ class Game
       if clue == word
         self.attempts = 0
         self.game_won = true
-        puts "Solved! #{clue}"
       end
     else
       puts "no match adding to bank"
@@ -97,12 +87,8 @@ class Game
   end
 
   def play_game
-    #puts "secret word is #{word} with a lenght of #{word.length}"
-    while attempts > 0
-      puts "Your letter bank: #{char_bank}"
-      puts "#{clue} \t attempts left:#{attempts}"
-      user_guess
-    end
-    puts game_won ? "you win!" : "you lose! word was #{word}"
+    puts "Your letter bank: #{char_bank}"
+    puts "#{clue} \t attempts left:#{attempts}"
+    return user_guess
   end
 end
