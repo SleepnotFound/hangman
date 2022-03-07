@@ -1,13 +1,12 @@
 class Game
   attr_accessor :attempts, :clue, :game_won, :word, :char_bank
-  #attr_reader :word, :char_bank
+
   def initialize
     @word = random_word
     @attempts = 6
     @char_bank = []
     @clue = @word.gsub(/\w/, "_")
     @game_won = false
-    #play_game
   end
 
   def to_yaml
@@ -22,7 +21,7 @@ class Game
 
   def save_data(data)
     Dir.mkdir('saves') unless Dir.exist?('saves')
-    filename = "saves/save_data_test_1.yaml"
+    filename = "saves/save_02.yaml"
 
     File.open(filename, 'w') do |file|
       file.puts data
@@ -30,7 +29,6 @@ class Game
   end
 
   def self.load_game(data)
-    puts "calling self load game on class Game"
     game = self.new
     game.word = data[:word]
     game.attempts = data[:attempts]
@@ -60,7 +58,7 @@ class Game
     if guess == 'save'
       data = self.to_yaml
       save_data(data)
-      puts "your game has been saved!"
+      puts "\e[32myour game has been saved!\e[0m"
     elsif guess.length == 1 && guess.match?(/[a-z]/)
       char_bank.include?(guess) ? user_guess : compare_guess(guess)
     elsif guess.length >= 5 && guess.match?(/[a-z]/)
